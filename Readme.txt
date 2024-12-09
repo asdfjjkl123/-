@@ -15,7 +15,7 @@ subtitle can be a.[sc/tc/chs/cht/jpsc/jptc].ass
 where "a" is any non-Chinese character
 
 hardsub parallel & series:
-In order to further squeeze the CPU performance, users whose CPU uasge is not 100% when running series can choose parallel mode, which will run multiple x264 at once. When using parallel, please note that the file name cannot contain "&" and other batches special symbols, otherwise x264 may not be started automatically and needs to be started manually
+In order to further squeeze the CPU performance, users whose CPU uasge is not 100% when running series can choose parallel mode, which will run multiple x264 at once. 
 
 subset lite version:
 Removed the function of checking for missing characters. If there are metaphysical bugs such as missing characters after subset, and the inability to load fonts after subset (random alphanumeric characters, for example: 9GXY3IRF), please use the lite version.
@@ -40,7 +40,7 @@ Before using subset, if an error is reported at last time, it is recommended to 
 當中a為任意非中文字元
 
 hardsub parallel & series:
-為進一步壓榨cpu性能, 對跑串聯(series)時跑不滿cpu100%的用戶, 可選用並聯(parallel)方式, 它會一次性跑好多個x264, 使用並聯時請注意文件名不能包含&等batch中的特殊符號, 否則可能無法自動啟動x264, 需手動啟動
+為進一步壓榨cpu性能, 對跑串聯(series)時跑不滿cpu100%的用戶, 可選用並聯(parallel)方式, 它會一次性跑好多個x264
 
 subset lite版:
 去除查缺字功能,若出現內封後炸字,無法加載內封後的字體(隨機英數,例:9GXY3IRF)等玄學bug,請使用lite版,

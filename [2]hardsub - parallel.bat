@@ -33,6 +33,11 @@ if exist "%~dpn1.JPTC.ass" set tc="%~dpn1.JPTC.ass"
 if exist "%~dpn1.JPSC.ass" set jpsc=1
 if exist "%~dpn1.JPTC.ass" set jptc=1
 
+setlocal enabledelayedexpansion
+set "batname=%~nx1"
+set "batname=!batname:&=_!"
+setlocal disabledelayedexpansion
+
 set Audio_Quality=192
 
 ::check mp4 exist
@@ -117,8 +122,9 @@ if %resolution%==2 goto :1080p
 
 ::------------------------------------------------------------------------------------------
 :writecode_pre
-if exist "%~dpnx1_%resst%.vpy" del "%~dpnx1_%resst%.vpy"
-if exist "%~dpnx1_%resst%.bat" del "%~dpnx1_%resst%.bat"
+if exist "%~dp1%batname%_%resst%.vpy" del "%~dp1%batname%_%resst%.vpy"
+if exist "%~dp1%batname%_%resst%.bat" del "%~dp1%batname%_%resst%.bat"
+
 (
 echo import vapoursynth as vs
 echo import sys
@@ -127,24 +133,26 @@ echo from vapoursynth import core
 echo source = r%mkv%
 echo src = core.lsmas.LWLibavSource^(source,format="yuv420p10",cache=0^)
 echo src = mvf.Depth^(src,depth=8^)
-)>>"%~dpnx1_%resst%.vpy"
+)>>"%~dp1%batname%_%resst%.vpy"
 goto :callback_pre%resst%
 ::------------------------------------------------------------------------------------------
 :writecode_post
-if %res720%==0 echo res = core.%subfilter%(src,ass).set_output() >>"%~dpnx1_%resst%.vpy"
-if %res720%==1 echo res = core.%subfilter%(src,ass).fmtc.resample(1280,720,kernel="lanczos",taps=4).set_output() >>"%~dpnx1_%resst%.vpy"
+if %res720%==0 echo res = core.%subfilter%(src,ass).set_output() >>"%~dp1%batname%_%resst%.vpy"
+if %res720%==1 echo res = core.%subfilter%(src,ass).fmtc.resample(1280,720,kernel="lanczos",taps=4).set_output() >>"%~dp1%batname%_%resst%.vpy"
 set jpname="%~n1_%resst%.mp4"
 (
-echo %vspipe% --y4m "%~dpnx1_%resst%.vpy" - ^| %x264% %x264info% --output "%~n1_%resst%.264" -
+echo %vspipe% --y4m "%~dp1%batname%_%resst%.vpy" - ^| %x264% %x264info% --output "%~n1_%resst%.264" -
 echo %mp4box% -add "%~n1_%resst%.264" -add "%~dpn1.aac" -new "%~n1_%resst%.mp4"
-echo if exist "%~n1_%resst%.mp4" del "%~dpnx1_%resst%.vpy"
+echo if exist "%~n1_%resst%.mp4" del "%~dp1%batname%_%resst%.vpy"
 echo if exist "%~n1_%resst%.mp4" del "%~n1_%resst%.264"
 echo if %jpsc%==1 ren "%~n1_%resst%.mp4" %jpname:_CHS=_JPSC%
 echo if %jptc%==1 ren "%~n1_%resst%.mp4" %jpname:_CHT=_JPTC%
-echo del "%~dpnx1_%resst%.bat"
-)>>"%~dpnx1_%resst%.bat"
+echo del "%~dp1%batname%_%resst%.bat"
+)>>"%~dp1%batname%_%resst%.bat"
+
 timeout 1
-start "coding %~n1 %resst%" "%~dpnx1_%resst%.bat"
+
+start "coding %~n1 %resst%" "%~dp1%batname%_%resst%.bat"
 
 goto :callback_post%resst%
 ::------------------------------------------------------------------------------------------
@@ -158,7 +166,7 @@ set resst=1080p_CHS
 set res720=0
 goto :writecode_pre
 :callback_pre1080p_CHS
-echo ass = r%sc% >>"%~dpnx1_%resst%.vpy"
+echo ass = r%sc% >>"%~dp1%batname%_%resst%.vpy"
 goto :writecode_post
 :callback_post1080p_CHS
 
@@ -176,7 +184,7 @@ set resst=1080p_CHT
 set res720=0
 goto :writecode_pre
 :callback_pre1080p_CHT
-echo ass = r%tc% >>"%~dpnx1_%resst%.vpy"
+echo ass = r%tc% >>"%~dp1%batname%_%resst%.vpy"
 goto :writecode_post
 :callback_post1080p_CHT
 
@@ -194,7 +202,7 @@ set resst=720p_CHS
 set res720=1
 goto :writecode_pre
 :callback_pre720p_CHS
-echo ass = r%tc% >>"%~dpnx1_%resst%.vpy"
+echo ass = r%tc% >>"%~dp1%batname%_%resst%.vpy"
 goto :writecode_post
 :callback_post720p_CHS
 
@@ -209,7 +217,7 @@ set resst=720p_CHT
 set res720=1
 goto :writecode_pre
 :callback_pre720p_CHT
-echo ass = r%tc% >>"%~dpnx1_%resst%.vpy"
+echo ass = r%tc% >>"%~dp1%batname%_%resst%.vpy"
 goto :writecode_post
 :callback_post720p_CHT
 
